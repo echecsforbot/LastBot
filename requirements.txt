@@ -1,0 +1,56 @@
+# This is a PIP 6+ requirements file for using Pywikibot and scripts
+#
+# All dependencies can be installed using:
+# $ sudo pip install -r requirements.txt
+#
+# It is organised so that simple requirements
+# are processed first, and more difficult packages
+# are last.
+#
+# It is good practise to install packages using the system
+# package manager if it has a packaged version.  If you are
+# unsure, please use pip as described at the top of the file.
+#
+# To get a list of potential matches, use
+#
+# $ awk -F '[#>=]' '{print $1}' requirements.txt | xargs yum search
+#     or
+# $ awk -F '[#>=]' '{print $1}' requirements.txt | xargs apt-cache search
+
+# mandatory dependencies, others are optional
+importlib_metadata ; python_version < '3.8'
+mwparserfromhell>=0.5.2
+packaging
+requests>=2.21.0
+
+# MediaWiki markup parser
+# mwparserfromhell is mandatory but wikitextparser can be used instead
+# mwparserfromhell is still required for commons_information.py and patrol.py
+# wikitextparser>=0.47.5
+
+# OAuth support
+# mwoauth 0.2.4 is needed because it supports getting identity information
+# about the user
+mwoauth>=0.2.4,!=0.3.1
+
+# interwiki_graph.py module and category_graph.py script:
+pydot >= 1.4.1
+
+# cosmetic_changes
+python-stdnum >= 1.19
+
+# GUI
+Pillow >= 8.1.2, != 10.0, != 10.1
+
+# core pagegenerators
+google >= 1.7
+sseclient >= 0.0.18,< 0.0.23
+
+# The mysql generator in pagegenerators depends on PyMySQL
+PyMySQL >= 1.0.0
+
+# core HTML comparison parser in diff module
+beautifulsoup4>=4.7.1
+
+# scripts/weblinkchecker.py
+memento_client==0.6.1
