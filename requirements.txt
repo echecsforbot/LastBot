@@ -54,8 +54,3 @@ beautifulsoup4>=4.7.1
 
 # scripts/weblinkchecker.py
 memento_client==0.6.1
-
-time
-datetime
-anyascii
-dateutil.parser
