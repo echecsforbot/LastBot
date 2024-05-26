@@ -55,6 +55,9 @@ def main():
                     for Domaine in IngnorerCesDomaines:
                         if Domaine in RecentPage['title']:
                             IsBroken = True
+
+                    if "mw-reverted" in RecentPage['tags']:
+                        IsBroken = True
         
                     if IsBroken == False and RecentPage['user'] != "LastBot":
                         score = 0
