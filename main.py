@@ -25,6 +25,7 @@ IngnorerCesDomaines = ["Utilisateur:", "Wikipédia:", "Discussion:",
 def main():
     global site
     global pageLog
+    global IngnorerCesDomaines
 
     while True:
         NegativeTime = 0
