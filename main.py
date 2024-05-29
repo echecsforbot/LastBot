@@ -14,18 +14,10 @@ LBversion = "0.2.02"
 site = pywikibot.Site("fr", "wikipedia")
 pageLog = pywikibot.page.BasePage(site, "Utilisateur:LastBot/Logs")
 
-IngnorerCesDomaines = ["Utilisateur:", "Wikipédia:", "Discussion:", 
-                        "Projet:", "Portail", "Utilisatrice:", "Modèle",
-                        "Discussion utilisatrice:", "Discussion utilisateur:", 
-                        "Catégorie:", "Module:", "Aide:", "Discussion aide:",
-                        "Discussion modèle:", "MediaWiki:", "Fichier:",
-                        "Discussion catégorie:"]
-
 #RUN
 def main():
     global site
     global pageLog
-    global IngnorerCesDomaines
 
     while True:
         NegativeTime = 0
@@ -44,18 +36,13 @@ def main():
     
             RCList = site.recentchanges(start=StartingTime, end=EndingTime,
                                         reverse=True, changetype="edit", 
-                                        bot=False, top_only=False)
+                                        bot=False, top_only=False, excludeuser="Salebot",
+                                        namespaces="main")
             
             #VÉRIFIER LES RC
             for RecentPage in RCList:
 
                 IsBroken = False
-    
-                #SKIP DES ESPACES DE NOMS
-                for Domaine in IngnorerCesDomaines:
-                    if Domaine in RecentPage['title']:
-                        IsBroken = True
-
                 if "mw-reverted" in RecentPage['tags']:
                     IsBroken = True
     
@@ -64,14 +51,13 @@ def main():
                     ContentDisplay = ""
                     resultsDTC = []
     
-                    print(RecentPage['title'])
+                    #print(RecentPage['title'])
     
                     #FORMAT DES RESULTATS (ELEMENT DE resultsDTC): [SCORE, TEXTE POUR LE LOG]
                     #DTC + SCR
-                    resultsDTC.append(scr.Score("WEX", dtc.WEX(RecentPage), RecentPage))
-                    resultsDTC.append(scr.Score("AC", dtc.AC(RecentPage), RecentPage))
                     #WEX
-                    '''
+                    resultsDTC.append(scr.Score("USER", dtc.USER(RecentPage), RecentPage)) #USER
+                    
                     try:
                         resultsDTC.append(scr.Score("WEX", dtc.WEX(RecentPage), RecentPage)) #WEX
                     except:
@@ -79,58 +65,26 @@ def main():
                             ErrorFile.write(f"\n{site.server_time()} - WEX failed: {RecentPage['revid']} [{str(RecentPage['timestamp'])}] [{RecentPage['title']}]")
 
 
-                    try:
-                        resultsDTC.append(scr.Score("AC", dtc.AC(RecentPage), RecentPage)) #AC
-                    except:
-                        with open("errors.txt", "a") as ErrorFile:
-                            ErrorFile.write(f"\n{site.server_time()} - AC failed: {RecentPage['revid']} [{str(RecentPage['timestamp'])}] [{RecentPage['title']}]")
-                    '''
-                    
                     #SOCRE
                     for result in resultsDTC:
                         score += result[0]
     
                     #MODIFICATEURS DE SCORE
                     if score > 0:
-                        checkedOrNot = "checked"
+                        checkedOrNot = "no"
                         UserToCheck = pywikibot.User(site, RecentPage['user'])
     
                         #BONUS ET MALUS
-                        if "sysop" in UserToCheck.groups():
-                            score = 0
-    
-                        elif "autopatrolled" in UserToCheck.groups():
+                        if "autopatrolled" in UserToCheck.groups():
                             checkedOrNot = "yes"
-                            score -= 0.5
-    
-                        elif "autoconfirmed" in UserToCheck.groups():
-                            checkedOrNot = "no"
-                            score += 0.25
                         else:
                             checkedOrNot = "no"
-                            score += 0.3
-                        if len(UserToCheck.rights()) == 0:
-                            score += 0.4
     
                         if score >= 1:
                             #MISE EN PAGE DU LOG
                             #DETAILS DISPLAY
         
                             ContentDisplay = f"\n# Commentaire : « {RecentPage['comment']} »"
-        
-                            #POURCENTAGE EDIT REVOQUÉ (derniers 100 edit max)
-    
-                            TotalContrib = 0
-                            TotalContribReverted = 0
-    
-                            #--STARTING ET ENDING SONT INVERSES : C'EST NORMAL \|/--
-                            ChangesToCheck = site.recentchanges(namespaces="0", changetype="edit", total=150, user=RecentPage['user'])
-                            for Change in ChangesToCheck:
-                                if "mw-reverted" in Change["tags"]:
-                                    TotalContribReverted += 1
-                                TotalContrib += 1
-        
-                            ContentDisplay = ContentDisplay + f"\n# '''{round(100 * TotalContribReverted / TotalContrib)}%''' d'éditions révoquées sur les '''{TotalContrib}''' dernières."
     
                             for result in resultsDTC:
                                 ContentDisplay = ContentDisplay + result[1]
