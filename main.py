@@ -37,7 +37,7 @@ def main():
             RCList = site.recentchanges(start=StartingTime, end=EndingTime,
                                         reverse=True, changetype="edit", 
                                         bot=False, top_only=False, excludeuser="Salebot",
-                                        namespaces="main")
+                                        namespaces=0)
             
             #VÉRIFIER LES RC
             for RecentPage in RCList:
