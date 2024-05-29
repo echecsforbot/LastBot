@@ -1,10 +1,11 @@
 import listsLB as lst
 import pagecleanersLB as pgcl
+import pywikibot
 
 '''
 CE MODULE (detectorsLB.py) CONTIENT TOUS LES DÉTECTEURS DE VANDALISMES
 '''
-
+site = pywikibot.Site("fr", "wikipedia")
 #MOTS ET EXPRESSIONS
 
 PossibleEndOrStart = [' ', ',', ';', ':', '.', '?', '!', ')', '"', '«', '»', '[', ']', '/', '{', '}', "'", '(', '*', '+', '=', '<', '>']
@@ -47,86 +48,43 @@ def WEX(RecentPage):
 
     return ResultWEX
 
-#DETECTION DES CHANGEMENT DE DATE DE NAISSANCE ET DE MORT
+#DETECTION DES CHANGEMENTS DE DATES DE NAISSANCE ET DE MORT
 def AC(RecentPage):
-    CleanWEX = pgcl.GetCleanWEX()
-    OldDiffNoSpace = CleanWEX["OldDiff"].replace(" ", "")
-    NewDiffNoSpace = CleanWEX["NewDiff"].replace(" ", "")
+    pass
 
-    AgeDiff = 0
-    AgeOldDiff = 0
-    AgeNewDiff = 0
-    ResultAC = [0, 0, 0]
-    ParaIDList = ["NAISSANCE", "DECES"]
+#ANALYSE DU PASSE RECENT DE L'UTILISATEUR
+def USER(RecentPage):
+    global site
+    ResultUSER = []
+    UserToCheck = pywikibot.User(site, RecentPage['user'])
+    #POURCENTAGE EDITS REVOQUÉS (derniers 75 edit max)
 
-    for ID in ParaIDList:
-        ParaID = "|DATEDE" + ID + "="
-        LenParaID = len(ParaID)
-        ParaIndex = OldDiffNoSpace.find(ParaID)
-        
-        if ParaID in OldDiffNoSpace and ParaID in NewDiffNoSpace:
-            #SI LA DATE EST UN MODELE
-            
-            #OLDDIFF
-            if OldDiffNoSpace[ParaIndex + LenParaID] == "{":
-                EndTemplateIndex = ParaIndex + LenParaID
-                BugPrevent = 100
-                while OldDiffNoSpace[EndTemplateIndex] != "}" and BugPrevent > 1:
-                    EndTemplateIndex += 1
-                    BugPrevent -= 1
+    TotalContrib = 0
+    TotalContribReverted = 0
 
-                if BugPrevent > 0:
-                    TemplateToCheck = OldDiffNoSpace[ParaIndex + LenParaID - 1:EndTemplateIndex + 1]
-                    
-                    if TemplateToCheck[0] == " ":
-                        TemplateToCheck = TemplateToCheck[0:]
+    ChangesToCheck = site.recentchanges(namespaces="0", changetype="edit", total=75, user=RecentPage['user'])
+    for Change in ChangesToCheck:
+        if "mw-reverted" in Change["tags"]:
+            TotalContribReverted += 1
+        TotalContrib += 1
 
+    ResultUSER.append(TotalContrib)
+    ResultUSER.append(TotalContribReverted)
 
-                    TemplateToCheck.replace("}", "")
-                    TemplateToCheck.replace("{", "")
-                    TemplateToCheck.replace("/", "|")
-                    TemplateToCheck = TemplateToCheck.split("|")
+    #GROUPE DE L'UTILISATEUR
+    if "sysop" in UserToCheck.groups():
+        ResultUSER.append("sysop")
 
-                    ElementsToDel = ["DATE", "DE", ID]
-                    for Element in ElementsToDel:
-                        if Element in TemplateToCheck:
-                            TemplateToCheck.remove(Element)
-                            
-                    #NEWDIFF
-                    if len(TemplateToCheck[2]) == 4:
-                        
-                        AgeOldDiff = int(TemplateToCheck[2])
+    elif "autopatrolled" in UserToCheck.groups():
+        ResultUSER.append("patrolled")
 
-                        ParaIndex = NewDiffNoSpace.find(ParaID)
-                        
-                        if NewDiffNoSpace[ParaIndex + LenParaID] == "{":
-                            EndTemplateIndex = ParaIndex + LenParaID
-                            BugPrevent = 100
-                            while NewDiffNoSpace[EndTemplateIndex] != "}" and BugPrevent > 1:
-                                EndTemplateIndex += 1
-                                BugPrevent -= 1
+    elif "autoconfirmed" in UserToCheck.groups():
+        ResultUSER.append("confirmed")
 
-                            if BugPrevent > 0:
-                                TemplateToCheck = NewDiffNoSpace[ParaID + LenParaID - 1:EndTemplateIndex + 1]
-                    
-                                if TemplateToCheck[0] == " ":
-                                    TemplateToCheck = TemplateToCheck[0:]
+    elif len(UserToCheck.rights()) == 0:
+        ResultUSER.append("ip")
+    else:
+        ResultUSER.append("registered")
 
-                                TemplateToCheck.replace("}", "")
-                                TemplateToCheck.replace("{", "")
-                                TemplateToCheck.replace("/", "|")
-                                TemplateToCheck = TemplateToCheck.split("|")
+    return ResultUSER
 
-                                ElementsToDel = ["DATE", "DE", ID]
-                                for Element in ElementsToDel:
-                                    if Element in TemplateToCheck:
-                                        TemplateToCheck.remove(Element)
-
-                        if len(TemplateToCheck[2]) == 4:
-                            AgeNewDiff = int(TemplateToCheck[2])
-
-                            AgeDiff = [((AgeNewDiff - AgeOldDiff) ** 2) ** (1 / 2), AgeOldDiff, AgeNewDiff]
-    
-    ResultAC = [AgeDiff, AgeOldDiff, AgeNewDiff]
-
-    return ResultAC
