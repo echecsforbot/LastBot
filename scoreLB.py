@@ -69,8 +69,9 @@ def Score(typeDTC, data, RecentPage):
     if typeDTC == "USER":
         ContentDisplay = f"\n'''{data[1]}''' éditions révoquées sur les '''{data[0]}''' dernières ('''{round((data[1] / data[0]) * 100)}%''')"
 
-        if data[1] / data[0] >= 0.2:
-            score += data[1] / data[0]
+        if data[0] >= 5:
+            if data[1] / data[0] >= 0.2:
+                score += data[1] / data[0]
 
         if data[2] == "sysop":
             score -= 100
