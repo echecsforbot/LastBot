@@ -22,8 +22,8 @@ def deletelogs():
     #VERIFIER SI DES DIFFS ONT ETES REVOQUEES
 
     TimeNow = time.time()
-    OldPage = pageLog.get()
-    BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
+    OldText = pageLog.get()
+    BeforeLog = OldText[:OldText.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
 
     NewTextPageLog = BeforeLog
 
@@ -32,7 +32,7 @@ def deletelogs():
 
     for Log in Logs:
         #POUR CHAQUE LOG DU TABLEAU
-        StartingTime = tmcc.CalcIS(tmcc.UNEP_IS(TimeNow), - 57600) #57600s = 16 heures
+        StartingTime = tmcc.CalcIS(tmcc.UNEP_IS(TimeNow), - 60000) #57600s = 16 heures
         EndingTime = site.server_time()
         LogsToCheck = site.recentchanges(start=StartingTime, end=EndingTime, reverse=True, changetype="edit", 
                                 bot=False, top_only=False, namespaces=0, user=Log[1])
