@@ -75,8 +75,10 @@ def CleanLogs(pageLog):
 
             while Log[digitI] != "|":
                 digitI += 1
-
-            cleanlog.append(Log[templateI:digitI])
+            if template == "]] ([[Spécial:Diff/":
+                cleanlog.append(int(Log[templateI:digitI]))
+            else:
+                cleanlog.append(Log[templateI:digitI])
 
         cleanlog.append(Log)
 
