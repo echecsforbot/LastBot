@@ -41,7 +41,7 @@ def deletelogs():
         for LogToCheck in LogsToCheck:
             if LogToCheck["revid"] == Log[0]:
                 if tmcc.IS_UNEP(LogToCheck["timestamp"]) > TimeNow - 57600 and "mw-reverted" not in LogToCheck["tags"]:
-                    NewTextPageLog = NewTextPageLog + "\n|-" + f"\n{Log}"
+                    NewTextPageLog = NewTextPageLog + "\n|-" + f"\n{Log[2]}"
                 else:
                     NBRDEL += 1
 
