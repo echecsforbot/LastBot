@@ -22,8 +22,8 @@ def deletelogs():
     #VERIFIER SI DES DIFFS ONT ETES REVOQUEES
 
     TimeNow = time.time()
-    OldText = pageLog.get()
-    BeforeLog = OldText[:OldText.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
+    OldPage = pageLog.get()
+    BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
 
     NewTextPageLog = BeforeLog
 
@@ -63,8 +63,6 @@ def deletelogs():
 def main():
     global site
     global pageLog
-
-    BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
 
     while True:
         NegativeTime = 0
