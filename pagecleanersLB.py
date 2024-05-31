@@ -78,7 +78,7 @@ def CleanLogs(pageLog):
 
             cleanlog.append(Log[templateI:digitI])
 
-        cleanlog.append(Logs[Log])
+        cleanlog.append(Log)
 
         cleanlogs.append(cleanlog)
 
