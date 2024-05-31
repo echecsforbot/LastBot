@@ -62,7 +62,7 @@ def USER(RecentPage):
     TotalContrib = 0
     TotalContribReverted = 0
 
-    ChangesToCheck = site.recentchanges(namespaces="0", changetype="edit", total=75, user=RecentPage['user'])
+    ChangesToCheck = site.recentchanges(namespaces=0, changetype="edit", total=75, user=RecentPage['user'])
     for Change in ChangesToCheck:
         if "mw-reverted" in Change["tags"]:
             TotalContribReverted += 1
