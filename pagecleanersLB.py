@@ -54,3 +54,31 @@ def GetCleanWEX():
     global CleanWEXText
 
     return CleanWEXText
+
+def CleanLogs(pageLog):
+    OldLogs = pageLog[pageLog.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->"):len(pageLog)]
+    Logs = OldLogs.split("|-")
+    if Logs[0] == "":
+        del Logs[0]
+
+    cleanlogs = []
+    Templates = ["]] ([[Spécial:Diff/", "diff]]) par [[Utilisateur:"]
+
+    for Log in Logs:
+        #RETROUVER LE REVID ET USER
+        cleanlog = []
+
+        for template in Templates:
+            templateI = Log.find(template) + len(template)
+            digitI = templateI
+
+            while Log[digitI] != "|":
+                digitI += 1
+
+            cleanlog.append(Log[templateI:digitI])
+
+        cleanlog.append(Logs[Log])
+
+        cleanlogs.append(cleanlog)
+
+    return cleanlogs
