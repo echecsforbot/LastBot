@@ -73,10 +73,8 @@ def Score(typeDTC, data, RecentPage):
             if data[1] / data[0] >= 0.2:
                 score += data[1] / data[0]
 
-        if data[2] == "sysop":
+        if data[2] == "sysop" or data[2] == "patrolled":
             score -= 100
-        elif data[2] == "patrolled":
-            score -= 0.5
         elif data[2] == "confirmed":
             score += 0.15
         elif data[2] == "registered":
