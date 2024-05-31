@@ -59,7 +59,7 @@ def CleanLogs(pageLog):
     OldLogs = pageLog[pageLog.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->"):len(pageLog)]
     Logs = OldLogs.split("|-")
     for Log in range(len(Logs) -1, -1, -1):
-        if len(Logs[Log]) == 0:
+        if len(Logs[Log]) == 0 or "]] ([[Spécial:Diff/" not in Logs[Log] or "diff]]) par [[Utilisateur:" not in Logs[Log]:
             del Logs[Log]
 
     cleanlogs = []
