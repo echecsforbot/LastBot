@@ -58,8 +58,9 @@ def GetCleanWEX():
 def CleanLogs(pageLog):
     OldLogs = pageLog[pageLog.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->"):len(pageLog)]
     Logs = OldLogs.split("|-")
-    if Logs[0] == "":
-        del Logs[0]
+    for Log in range(len(Logs) -1, -1, -1):
+        if len(Logs[Log]) == 0:
+            del Logs[Log]
 
     cleanlogs = []
     Templates = ["]] ([[Spécial:Diff/", "diff]]) par [[Utilisateur:"]
