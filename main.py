@@ -25,7 +25,7 @@ def deletelogs():
     OldPage = pageLog.get()
     BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
 
-    NewTextPageLog = BeforeLog
+    NewTextPageLog = BeforeLog + "\n"
 
     #FORMAT LOGS : [[revid1, user1, logtext1], [revid2, user2, logtext2]]
     Logs = pgcl.CleanLogs(pageLog.get())
@@ -41,7 +41,7 @@ def deletelogs():
         for LogToCheck in LogsToCheck:
             if LogToCheck["revid"] == Log[0]:
                 if tmcc.IS_UNEP(LogToCheck["timestamp"]) > TimeNow - 57600 and "mw-reverted" not in LogToCheck["tags"]:
-                    NewTextPageLog = NewTextPageLog + f"\n|-{Log[2]}"
+                    NewTextPageLog = NewTextPageLog + f"|-{Log[2]}"
                 else:
                     NBRDEL += 1
 
