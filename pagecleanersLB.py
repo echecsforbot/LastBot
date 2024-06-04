@@ -1,5 +1,8 @@
 import pywikibot
 from anyascii import anyascii
+import timecalcLB as tmcc
+import time
+import datetime
 
 '''
 CE MODULE (pagecleanersLB.py) CONTIENT TOUTES LES FONCTIONS PERMETTANT
@@ -55,33 +58,24 @@ def GetCleanWEX():
 
     return CleanWEXText
 
-def CleanLogs(pageLog):
-    OldLogs = pageLog[pageLog.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->"):len(pageLog)]
-    Logs = OldLogs.split("|-")
-    for Log in range(len(Logs) -1, -1, -1):
-        if len(Logs[Log]) == 0 or "]] ([[Spécial:Diff/" not in Logs[Log] or "diff]]) par [[Utilisateur:" not in Logs[Log]:
-            del Logs[Log]
+def ReadCurrentLogs():
+    #LIRE currentlogs.txt
+    #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
+    with open("currentlogs.txt") as CLF:
+        LogsData = CLF.readlines()
 
-    cleanlogs = []
-    Templates = ["]] ([[Spécial:Diff/", "diff]]) par [[Utilisateur:"]
+    for Log in LogsData:
+        Log = Log[:len(Log) - 2].split(',')
+        Log[0] = int(Log[0])
+        Log[1] = tmcc.UNEP_IS(time.mktime(datetime.datetime.strptime(Log[1],"%Y-%m-%dT%H:%M:%SZ").timetuple()))
 
-    for Log in Logs:
-        #RETROUVER LE REVID ET USER
-        cleanlog = []
+    return LogsData
 
-        for template in Templates:
-            templateI = Log.find(template) + len(template)
-            digitI = templateI
+def GetTextsFromLogsPage():
+    #RECUPERER LE TEXTE DES LOGS
+    pageLog = pywikibot.page.BasePage(site, "Utilisateur:LastBot/Logs")
+    ActualPage = pageLog.get()
+    LogsTextList = ActualPage.split("|- <!-- LOGSTART -->")
+    del LogsTextList[0]
 
-            while Log[digitI] != "|":
-                digitI += 1
-            if template == "]] ([[Spécial:Diff/":
-                cleanlog.append(int(Log[templateI:digitI]))
-            else:
-                cleanlog.append(Log[templateI:digitI])
-
-        cleanlog.append(Log)
-
-        cleanlogs.append(cleanlog)
-
-    return cleanlogs
+    return LogsTextList
