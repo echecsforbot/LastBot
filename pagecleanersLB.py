@@ -65,12 +65,19 @@ def ReadCurrentLogs():
     with open("currentlogs.txt") as CLF:
         LogsData = CLF.readlines()
 
-    for Log in LogsData:
-        Log = re.split(',', Log)
-        Log[0] = int(Log[0])
-        Log[1] = tmcc.UNEP_IS(time.mktime(datetime.datetime.strptime(Log[1],"%Y-%m-%dT%H:%M:%SZ").timetuple()))
+    Data = []
+    DataI = 0
 
-    return LogsData
+    for Log in LogsData:
+        Data.append([])
+        Log = re.split(',', Log)
+        Data[DataI].append(int(Log[0]))
+        Data[DataI].append(tmcc.UNEP_IS(time.mktime(datetime.datetime.strptime(Log[1],"%Y-%m-%dT%H:%M:%SZ").timetuple())))
+        Data[DataI].append(int(Log[2]))
+        Data[DataI].append(int(Log[3]))
+        DataI += 1
+
+    return Data
 
 def GetTextsFromLogsPage():
     #RECUPERER LE TEXTE DES LOGS
