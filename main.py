@@ -110,7 +110,7 @@ def main():
     while True:
         NegativeTime = 0
         NbrCycles = -1 #int(input("Nombre de cycles (-1 = infini) : "))
-        DurCycle = 30 #int(input("Durée d'un cycle en secondes (15 conseillé) : "))
+        DurCycle = 60 #int(input("Durée d'un cycle en secondes (15 conseillé) : "))
     
         while NbrCycles != 0:
 
