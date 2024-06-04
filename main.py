@@ -105,8 +105,6 @@ def main():
     global site
     global pageLog
 
-    BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
-
     while True:
         NegativeTime = 0
         NbrCycles = -1 #int(input("Nombre de cycles (-1 = infini) : "))
