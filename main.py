@@ -64,7 +64,7 @@ def deletelogs():
         if ShouldKeepCurrentLogs[currentlog[0]] == True:
             #DATA FILE
             for param in currentlog:
-                NewContentLogsData = NewContentLogsData + param + ','
+                NewContentLogsData = NewContentLogsData + str(param) + ','
             
             NewContentLogsData = NewContentLogsData + '\n'
 
