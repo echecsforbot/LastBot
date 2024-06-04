@@ -4,7 +4,7 @@ Lexique :
 
 AC -> age change
 
-currentlog -> log actually in the table (Utilisateur:LastBot/Logs)
+currentlog -> a log that is currently in the table (Utilisateur:LastBot/Logs)
 
 dp -> module 'dateutil.parser'
 
