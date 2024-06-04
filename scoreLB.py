@@ -42,7 +42,7 @@ def Score(typeDTC, data, RecentPage):
                 if NoContext == True:
                     contextprint = "'''" + NewDiff[WordI:WordI + len(Word[0])].lower() + "'''"
 
-                ContentDisplay = ContentDisplay + f"\n# {lxq.GetFullName(WEXListIndex)} : « {contextprint} »"
+                ContentDisplay = ContentDisplay + f"\n{lxq.GetFullName(WEXListIndex)} : « {contextprint} »"
 
             WEXListIndex += 1
 
@@ -58,7 +58,7 @@ def Score(typeDTC, data, RecentPage):
             for age in range(data[0]):
                 score += 0.15
 
-            ContentDisplay = f"\nChangement important de date de naissance ou de mort : {data[1]} -> {data[2]}"
+            ContentDisplay = f"\n# Changement important de date de naissance ou de mort : {data[1]} -> {data[2]}"
         
         results = [score, ContentDisplay]
 
@@ -67,11 +67,11 @@ def Score(typeDTC, data, RecentPage):
     #USER
     #FORMAT : [NOMBRE EDITION MAX=75, NOMBRE D'EDITIONS REVOQUEES SUR LES MAX=75 DERNIERES EDITIONS, GROUPE DE L'UTILISATEUR]
     if typeDTC == "USER":
-        ContentDisplay = f"\n'''{data[1]}''' éditions révoquées sur les '''{data[0]}''' dernières ('''{round((data[1] / data[0]) * 100)}%''')"
+        ContentDisplay = f"\n# '''{data[1]}''' éditions révoquées sur les '''{data[0]}''' dernières ('''{round((data[1] / data[0]) * 100)}%''')"
 
         if data[0] >= 5:
             if data[1] / data[0] >= 0.2:
-                score += data[1] / data[0]
+                score += (data[1] / data[0]) * 0.8
 
         if data[2] == "sysop" or data[2] == "patrolled":
             score -= 100
