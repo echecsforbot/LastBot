@@ -20,6 +20,8 @@ LB -> LastBot
 
 lxq -> module 'lexiqueLB'
 
+MW -> mw-reverted
+
 OOC -> out of context
 
 pgcl -> module 'pagecleanersLB'
@@ -27,6 +29,8 @@ pgcl -> module 'pagecleanersLB'
 POOC -> potentially out of context
 
 PRC -> processing
+
+PTL -> patrolled
 
 RC -> recent change
 
