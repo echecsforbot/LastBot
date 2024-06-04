@@ -73,8 +73,8 @@ def ReadCurrentLogs():
         Log = re.split(',', Log)
         Data[DataI].append(int(Log[0]))
         Data[DataI].append(tmcc.UNEP_IS(time.mktime(datetime.datetime.strptime(Log[1],"%Y-%m-%dT%H:%M:%SZ").timetuple())))
-        Data[DataI].append(int(Log[2]))
-        Data[DataI].append(int(Log[3]))
+        Data[DataI].append(Log[2])
+        Data[DataI].append(Log[3])
         DataI += 1
 
     return Data
