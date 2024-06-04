@@ -221,7 +221,7 @@ def main():
 
                         #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
                         CLF = open("currentlogs.txt", "a")
-                        CLF.write(f"\n{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']}")
+                        CLF.write(f"{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']}\n")
                         CLF.close()
     
             #CALCULS DE LA DATE DE DEBUT ET DE FIN DU CYCLE SUIVANT
