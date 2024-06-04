@@ -60,6 +60,7 @@ def deletelogs():
     NewContentPage = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
     NewContentLogsData = ""
 
+
     for currentlog in CurrentLogs:
         if ShouldKeepCurrentLogs[currentlog[0]] == True:
             #DATA FILE
@@ -218,7 +219,7 @@ def main():
 
                         #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
                         CLF = open("currentlogs.txt", "a")
-                        CLF.write(f"{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']}\n")
+                        CLF.write(f"{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']},\n")
                         CLF.close()
     
             #CALCULS DE LA DATE DE DEBUT ET DE FIN DU CYCLE SUIVANT
