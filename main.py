@@ -63,11 +63,7 @@ def deletelogs():
     for currentlog in CurrentLogs:
         if ShouldKeepCurrentLogs[currentlog[0]] == True:
             #DATA FILE
-            for propriete in currentlog:
-                NewContentLogsData = NewContentLogsData + propriete + ","
-
-            NewContentLogsData = NewContentLogsData[:len(NewContentLogsData) - 1]
-            NewContentLogsData = NewContentLogsData + "\n"
+            NewContentLogsData = NewContentLogsData + f'{currentlog[0]}, {currentlog[1]}, {currentlog[2]}, {currentlog[3]}\n'
 
             #PAGE
             for LogText in LogsTextList:
