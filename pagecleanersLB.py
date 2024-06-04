@@ -65,7 +65,7 @@ def ReadCurrentLogs():
         LogsData = CLF.readlines()
 
     for Log in LogsData:
-        Log = Log[:len(Log) - 2].split(',')
+        Log = list(Log.split(','))
         Log[0] = int(Log[0])
         Log[1] = tmcc.UNEP_IS(time.mktime(datetime.datetime.strptime(Log[1],"%Y-%m-%dT%H:%M:%SZ").timetuple()))
 
