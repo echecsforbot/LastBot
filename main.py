@@ -91,7 +91,7 @@ def deletelogs():
 
     commentpage = "S"
     if RevertedCount >= 1:
-        commentpage = f"-revert:{RevertedCount}"
+        commentpage = commentpage + f"-revert:{RevertedCount}"
     if PatrolledCount >= 1:
         commentpage = commentpage + f"-patrol:{PatrolledCount}"
 
