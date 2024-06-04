@@ -3,6 +3,7 @@ from anyascii import anyascii
 import timecalcLB as tmcc
 import time
 import datetime
+import re
 
 '''
 CE MODULE (pagecleanersLB.py) CONTIENT TOUTES LES FONCTIONS PERMETTANT
@@ -65,7 +66,7 @@ def ReadCurrentLogs():
         LogsData = CLF.readlines()
 
     for Log in LogsData:
-        Log = list(Log.split(','))
+        Log = re.split(',', Log)
         Log[0] = int(Log[0])
         Log[1] = tmcc.UNEP_IS(time.mktime(datetime.datetime.strptime(Log[1],"%Y-%m-%dT%H:%M:%SZ").timetuple()))
 
@@ -75,7 +76,7 @@ def GetTextsFromLogsPage():
     #RECUPERER LE TEXTE DES LOGS
     pageLog = pywikibot.page.BasePage(site, "Utilisateur:LastBot/Logs")
     ActualPage = pageLog.get()
-    LogsTextList = ActualPage.split("|- <!-- LOGSTART -->")
+    LogsTextList = re.split("|- <!-- LOGSTART -->", ActualPage)
     del LogsTextList[0]
 
     return LogsTextList
