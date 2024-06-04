@@ -66,7 +66,7 @@ def deletelogs():
             for param in currentlog:
                 NewContentLogsData = NewContentLogsData + param + ','
             
-            NewContentLogsData = NewContentLogsData[:len(NewContentLogsData) - 2] + '\n'
+            NewContentLogsData = NewContentLogsData[:len(NewContentLogsData) - 1] + '\n'
 
             #PAGE
             for LogText in LogsTextList:
