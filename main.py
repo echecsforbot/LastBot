@@ -5,7 +5,7 @@ import detectorsLB as dtc
 import scoreLB as scr
 import pagecleanersLB as pgcl
 
-LBversion = "0.2.04"
+LBversion = "0.2.05"
 
 #MENU DE DÉMARRAGE
 #print("Configuration classique : WEX, AC")
@@ -18,51 +18,94 @@ def deletelogs():
     global site
     global pageLog
 
-    NBRDEL = 0
-    #VERIFIER SI DES DIFFS ONT ETES REVOQUEES
+    CurrentLogs = pgcl.ReadCurrentLogs()
+    ShouldKeepCurrentLogs = {}
+    PatrolledCount = 0
+    RevertedCount = 0
+    #FORMAT CURRENTLOG : [REVID, TIMESTAMP, USER, TITLE]
+    for currentlog in CurrentLogs:
 
-    TimeNow = time.time()
-    OldPage = pageLog.get()
-    BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
+        IsFound = False
+        #CHECK MW-REVERTED
+        StartingTime = tmcc.CalcIS(currentlog[1], - 120)
+        EndingTime = tmcc.CalcIS(currentlog[1], 120)
+        LogsMW = site.recentchanges(start=StartingTime, end=EndingTime, reverse=True, top_only=False, namespaces=0, 
+                                    changetype="edit", user=currentlog[2])
 
-    NewTextPageLog = BeforeLog + "\n"
-
-    #FORMAT LOGS : [[revid1, user1, logtext1], [revid2, user2, logtext2]]
-    Logs = pgcl.CleanLogs(pageLog.get())
-
-    for Log in Logs:
-        #POUR CHAQUE LOG DU TABLEAU
-        StartingTime = tmcc.CalcIS(tmcc.UNEP_IS(TimeNow), - 60000) #57600s = 16 heures
-        EndingTime = site.server_time()
-        LogsToCheck = site.recentchanges(start=StartingTime, end=EndingTime, reverse=True, changetype="edit", 
-                                bot=False, top_only=False, namespaces=0, user=Log[1])
+        for Log in LogsMW:
+            if Log['revid'] == currentlog[0]:
+                if "mw-reverted" in Log['tags']:
+                    IsFound = True
+                    RevertedCount += 1
+                    ShouldKeepCurrentLogs[currentlog[0]] = False
         
-        #PRENDRE TOUS LES LOGS DE L'UTILISATEUR SUR LES 16 DERNIERE HEURES
-        for LogToCheck in LogsToCheck:
-            if LogToCheck["revid"] == Log[0]:
-                if tmcc.IS_UNEP(LogToCheck["timestamp"]) > TimeNow - 57600 and "mw-reverted" not in LogToCheck["tags"]:
-                    NewTextPageLog = NewTextPageLog + f"|-{Log[2]}"
-                else:
-                    NBRDEL += 1
+        #CHECK PATROLLED
+        if IsFound == False:
+            StartingTime = tmcc.CalcIS(currentlog[1], - 120)
+            EndingTime = site.server_time()
+            LogPTL = site.logevents(logtype='patrol', page=currentlog[3], start=StartingTime, end=EndingTime, reverse=True)
 
-    if "|}" not in NewTextPageLog:
-        NewTextPageLog = NewTextPageLog + "\n|}"
+            for Log in LogPTL:
+                if Log['params']['curid'] == currentlog[0]:
+                    IsFound = True
+                    PatrolledCount += 1
+                    ShouldKeepCurrentLogs[currentlog[0]] = False
+
+        if IsFound == False:
+            ShouldKeepCurrentLogs[currentlog[0]] = True
+
+    #CREER LA NOUVELLE PAGE
+    LogsTextList = pgcl.GetTextsFromLogsPage()
+    OldPage = pageLog.get()
+    NewContentPage = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
+    NewContentLogsData = ""
+
+    for currentlog in CurrentLogs:
+        if ShouldKeepCurrentLogs[currentlog[0]] == True:
+            #DATA FILE
+            for propriete in currentlog:
+                NewContentLogsData = NewContentLogsData + propriete + ","
+
+            NewContentLogsData = NewContentLogsData[:len(NewContentLogsData) - 1]
+            NewContentLogsData = NewContentLogsData + "\n"
+
+            #PAGE
+            for LogText in LogsTextList:
+                if '<!-- IDSTART -->' + str(currentlog[0]) in LogText:
+                    NewContentPage = NewContentPage + f"|- <!-- LOGSTART -->{LogText}"
+            
+    if "|}" not in NewContentPage:
+        NewContentPage = NewContentPage + "\n|}"
+
+    CLF = open("currentlogs", "w")
+    CLF.write(NewContentLogsData)
+    CLF.close()
 
     NewTextFile = open("NewText.txt", "w")
-    NewTextFile.write(NewTextPageLog)
+    NewTextFile.write(NewContentPage)
     NewTextFile.close()
     
     NewTextFile = open("NewText.txt", "r")
     NewText = NewTextFile.read()
     NewTextFile.close()
 
-    pageLog.put(NewText, summary=f"S-{NBRDEL}-{LBversion}", watch=None, minor=True, botflag=None, force=True, asynchronous=False, callback=None, show_diff=False)
-     
+    commentpage = "S"
+    if RevertedCount >= 1:
+        commentpage = f"-revert:{RevertedCount}"
+    if PatrolledCount >= 1:
+        commentpage = commentpage + f"-patrol:{PatrolledCount}"
 
+    commentpage = commentpage + f"-{LBversion}"
+
+    pageLog.put(NewText, summary=commentpage, minor=True, botflag=None, force=True, 
+                asynchronous=False, callback=None, show_diff=False)
+    
 #RUN
 def main():
     global site
     global pageLog
+
+    BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
 
     while True:
         NegativeTime = 0
@@ -86,17 +129,13 @@ def main():
             RCList = site.recentchanges(start=StartingTime, end=EndingTime,
                                         reverse=True, changetype="edit", 
                                         bot=False, top_only=False, excludeuser="Salebot",
-                                        namespaces=0)
+                                        namespaces=0, patrolled=False)
             
             #VÉRIFIER LES RC
             for RecentPage in RCList:
 
                 IsBroken = False
                 if "mw-reverted" in RecentPage['tags']:
-                    IsBroken = True
-
-                UserToCheck = pywikibot.User(site, RecentPage['user'])
-                if "sysop" in UserToCheck.groups() or "autopatrolled" in UserToCheck.groups():
                     IsBroken = True
     
                 if IsBroken == False and RecentPage['user'] != "LastBot":
@@ -153,7 +192,7 @@ def main():
                         CheckBox = "{{" + f"Modèle:Checkbox|checked|color={Couleur}|tick=no" + "}}" + f"'''[{round(score, 2)}]'''"
                         Heure = str(RecentPage["timestamp"])
                         HeureDisplay = "'''" + str(Heure[11:16]) + "'''"
-                        TexteDuLog = "\n|-" + f"\n| {CheckBox}" + f"\n| {LenDiff}" + f"\n| {HeureDisplay}" + "\n| {{" + "Liste déroulante\n| titre = " + f"[[{RecentPage['title']}]] ([[Spécial:Diff/{RecentPage['revid']}|diff]]) par [[Utilisateur:{RecentPage['user']}|{RecentPage['user']}]] " +  f"([[Discussion utilisateur:{RecentPage['user']}|d]] • [[Spécial:Contributions/{RecentPage['user']}|c]])" + f"\n| contenu = {ContentDisplay}" + "}}"
+                        TexteDuLog = "\n|- <!-- LOGSTART -->" + f"\n| {CheckBox}" + f"\n| {LenDiff}" + f"\n| {HeureDisplay}" + "\n| {{" + "Liste déroulante\n| titre = " + f"[[{RecentPage['title']}]] ([[Spécial:Diff/<!-- IDSTART -->{RecentPage['revid']}|diff]]) par [[Utilisateur:{RecentPage['user']}|{RecentPage['user']}]] " +  f"([[Discussion utilisateur:{RecentPage['user']}|d]] • [[Spécial:Contributions/{RecentPage['user']}|c]])" + f"\n| contenu = {ContentDisplay}" + "}}"
 
                         OldPage = pageLog.get()
                         BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
@@ -177,8 +216,13 @@ def main():
                         LogsCountFile.write(f"{LogsCount + 1}")
                         LogsCountFile.close()
                         
-                        pageLog.put(NouveauLog, summary=f"Log  V{LogsCount + 1}-{LBversion}", watch=None, minor=True, botflag=None, force=True, asynchronous=False, callback=None, show_diff=False)
-                        #print(score)      
+                        pageLog.put(NouveauLog, summary=f"V{LogsCount + 1}-{LBversion}", watch=None, minor=True, botflag=None, force=True, asynchronous=False, callback=None, show_diff=False)
+                        #print(score)
+
+                        #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
+                        CLF = open("currentlogs.txt", "a")
+                        CLF.write(f"\n{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']}")
+                        CLF.close()
     
             #CALCULS DE LA DATE DE DEBUT ET DE FIN DU CYCLE SUIVANT
             TimeDiff = time.time() - TimeNow
