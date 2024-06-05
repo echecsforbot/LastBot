@@ -71,7 +71,7 @@ def deletelogs():
 
             #PAGE
             for LogText in LogsTextList:
-                if LogText.find('<!-- IDSTART -->{currentlog[0]}') != -1:
+                if LogText.find(f'<!-- IDSTART -->{currentlog[0]}') != -1:
                     NewContentPage = NewContentPage + f"\n|- <!-- LOGSTART -->{LogText}"
             
     if "|}" not in NewContentPage:
