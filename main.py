@@ -37,7 +37,6 @@ def deletelogs():
                 if "mw-reverted" in Log['tags']:
                     IsFound = True
                     RevertedCount += 1
-                    ShouldKeepCurrentLogs[currentlog[0]] = False
         
         #CHECK PATROLLED
         if IsFound == False:
@@ -49,10 +48,11 @@ def deletelogs():
                 if Log['params']['curid'] == currentlog[0]:
                     IsFound = True
                     PatrolledCount += 1
-                    ShouldKeepCurrentLogs[currentlog[0]] = False
 
         if IsFound == False:
-            ShouldKeepCurrentLogs[currentlog[0]] = True
+            ShouldKeepCurrentLogs[str(currentlog[0])] = True
+        else:
+            ShouldKeepCurrentLogs[str(currentlog[0])] = False
 
     #CREER LA NOUVELLE PAGE
     LogsTextList = pgcl.GetTextsFromLogsPage()
@@ -62,7 +62,7 @@ def deletelogs():
 
 
     for currentlog in CurrentLogs:
-        if ShouldKeepCurrentLogs[currentlog[0]] == True:
+        if ShouldKeepCurrentLogs[str(currentlog[0])] == True:
             #DATA FILE
             for param in currentlog:
                 NewContentLogsData = NewContentLogsData + str(param) + ','
