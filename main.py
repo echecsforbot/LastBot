@@ -50,9 +50,9 @@ def deletelogs():
                     PatrolledCount += 1
 
         if IsFound == False:
-            ShouldKeepCurrentLogs[str(currentlog[0])] = True
+            ShouldKeepCurrentLogs[currentlog[0]] = True
         else:
-            ShouldKeepCurrentLogs[str(currentlog[0])] = False
+            ShouldKeepCurrentLogs[currentlog[0]] = False
 
     #CREER LA NOUVELLE PAGE
     LogsTextList = pgcl.GetTextsFromLogsPage()
@@ -62,7 +62,7 @@ def deletelogs():
 
 
     for currentlog in CurrentLogs:
-        if ShouldKeepCurrentLogs[str(currentlog[0])] == True:
+        if ShouldKeepCurrentLogs[currentlog[0]] == True:
             #DATA FILE
             for param in currentlog:
                 NewContentLogsData = NewContentLogsData + str(param) + ','
@@ -72,7 +72,7 @@ def deletelogs():
             #PAGE
             for LogText in LogsTextList:
                 if LogText.find(f'<!-- IDSTART -->{currentlog[0]}') != -1:
-                    NewContentPage = NewContentPage + f"\n|- <!-- LOGSTART -->{LogText}"
+                    NewContentPage = NewContentPage + f"\n|-<!-- LOGSTART -->{LogText[2:]}"
             
     if "|}" not in NewContentPage:
         NewContentPage = NewContentPage + "\n|}"
@@ -190,7 +190,7 @@ def main():
                         CheckBox = "{{" + f"Modèle:Checkbox|checked|color={Couleur}|tick=no" + "}}" + f"'''[{round(score, 2)}]'''"
                         Heure = str(RecentPage["timestamp"])
                         HeureDisplay = "'''" + str(Heure[11:16]) + "'''"
-                        TexteDuLog = "\n|- <!-- LOGSTART -->" + f"\n| {CheckBox}" + f"\n| {LenDiff}" + f"\n| {HeureDisplay}" + "\n| {{" + "Liste déroulante\n| titre = " + f"[[{RecentPage['title']}]] ([[Spécial:Diff/<!-- IDSTART -->{RecentPage['revid']}|diff]]) par [[Utilisateur:{RecentPage['user']}|{RecentPage['user']}]] " +  f"([[Discussion utilisateur:{RecentPage['user']}|d]] • [[Spécial:Contributions/{RecentPage['user']}|c]])" + f"\n| contenu = {ContentDisplay}" + "}}"
+                        TexteDuLog = "\n|-<!-- LOGSTART -->" + f"\n| {CheckBox}" + f"\n| {LenDiff}" + f"\n| {HeureDisplay}" + "\n| {{" + "Liste déroulante\n| titre = " + f"[[{RecentPage['title']}]] ([[Spécial:Diff/<!-- IDSTART -->{RecentPage['revid']}|diff]]) par [[Utilisateur:{RecentPage['user']}|{RecentPage['user']}]] " +  f"([[Discussion utilisateur:{RecentPage['user']}|d]] • [[Spécial:Contributions/{RecentPage['user']}|c]])" + f"\n| contenu = {ContentDisplay}" + "}}"
 
                         OldPage = pageLog.get()
                         BeforeLog = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
