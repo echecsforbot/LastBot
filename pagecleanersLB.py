@@ -83,7 +83,7 @@ def GetTextsFromLogsPage():
     #RECUPERER LE TEXTE DES LOGS
     pageLog = pywikibot.page.BasePage(site, "Utilisateur:LastBot/Logs")
     ActualPage = pageLog.get()
-    LogsTextList = re.split("|- <!-- LOGSTART -->", ActualPage)
+    LogsTextList = re.split("<!-- LOGSTART -->", ActualPage)
     del LogsTextList[0]
 
     return LogsTextList
