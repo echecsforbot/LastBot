@@ -75,7 +75,7 @@ def deletelogs():
                     NewContentPage = NewContentPage + f"\n|-<!-- LOGSTART -->{LogText[:len(LogText) - 2]}"
             
     if "|}" not in NewContentPage:
-        NewContentPage = NewContentPage + "\n|}"
+        NewContentPage = NewContentPage + "|}"
 
     CLF = open("currentlogs.txt", "w")
     CLF.write(NewContentLogsData)
