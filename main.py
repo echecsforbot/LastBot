@@ -79,10 +79,15 @@ def deletelogs():
         NewContentPage = NewContentPage + "|}"
 
     CLF = open("currentlogs.txt", "w")
-    OldLogsData = CLF.readlines()
+
+    with open("currentlogs.txt") as CLFbis:
+        OldLogsData = CLFbis.readlines()
+
     CLF.write(NewContentLogsData)
-    NewLogsData = CLF.readlines()
     CLF.close()
+
+    with open("currentlogs.txt") as CLFbis:
+        NewLogsData = CLFbis.readlines()
 
     NewTextFile = open("NewText.txt", "w")
     NewTextFile.write(NewContentPage)
