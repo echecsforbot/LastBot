@@ -72,13 +72,16 @@ def deletelogs():
             #PAGE
             for LogText in LogsTextList:
                 if LogText.find(f'<!-- IDSTART -->{currentlog[0]}') != -1:
-                    NewContentPage = NewContentPage + f"|-<!-- LOGSTART -->{LogText[:len(LogText) - 2]}\n"
+                    AddToContentPage = f"|-<!-- LOGSTART -->{LogText[:len(LogText) - 2]}\n"
+                    NewContentPage = NewContentPage + AddToContentPage
             
     if "|}" not in NewContentPage:
         NewContentPage = NewContentPage + "|}"
 
     CLF = open("currentlogs.txt", "w")
+    OldLogsData = CLF.readlines()
     CLF.write(NewContentLogsData)
+    NewLogsData = CLF.readlines()
     CLF.close()
 
     NewTextFile = open("NewText.txt", "w")
@@ -97,8 +100,19 @@ def deletelogs():
 
     commentpage = commentpage + f"-{LBversion}"
 
-    pageLog.put(NewText, summary=commentpage, minor=True, botflag=None, force=True, 
-                asynchronous=False, callback=None, show_diff=False)
+    HasChanged = False
+
+    for NewLogData in NewLogsData:
+        if NewLogData not in OldLogsData:
+            HasChanged = True
+
+    for OldLogData in OldLogsData:
+        if OldLogData not in NewLogsData:
+            HasChanged = True
+
+    if HasChanged == True:
+        pageLog.put(NewText, summary=commentpage, minor=True, botflag=None, force=True, 
+                    asynchronous=False, callback=None, show_diff=False)
     
 #RUN
 def main():
