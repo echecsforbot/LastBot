@@ -5,7 +5,7 @@ import detectorsLB as dtc
 import scoreLB as scr
 import pagecleanersLB as pgcl
 
-LBversion = "0.2.05"
+LBversion = "0.2.06"
 
 #MENU DE DÉMARRAGE
 #print("Configuration classique : WEX, AC")
