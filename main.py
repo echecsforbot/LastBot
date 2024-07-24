@@ -76,7 +76,7 @@ def deletelogs():
                     NewContentPage = NewContentPage + AddToContentPage
             
     if "|}" not in NewContentPage:
-        NewContentPage = NewContentPage + "|}"
+        NewContentPage = NewContentPage + "\n|}"
 
     CLF = open("currentlogs.txt", "w")
 
