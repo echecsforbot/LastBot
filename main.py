@@ -72,7 +72,7 @@ def deletelogs():
             #PAGE
             for LogText in LogsTextList:
                 if LogText.find(f'<!-- IDSTART -->{currentlog[0]}') != -1:
-                    AddToContentPage = f"|-<!-- LOGSTART -->{LogText[:len(LogText) - 2]}\n"
+                    AddToContentPage = f"|-<!-- LOGSTART -->\n{LogText[:len(LogText) - 2]}"
                     NewContentPage = NewContentPage + AddToContentPage
             
     if "|}" not in NewContentPage:
