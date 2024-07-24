@@ -57,7 +57,7 @@ def deletelogs():
     #CREER LA NOUVELLE PAGE
     LogsTextList = pgcl.GetTextsFromLogsPage()
     OldPage = pageLog.get()
-    NewContentPage = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")]
+    NewContentPage = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")] + "\n"
     NewContentLogsData = ""
 
 
@@ -72,7 +72,7 @@ def deletelogs():
             #PAGE
             for LogText in LogsTextList:
                 if LogText.find(f'<!-- IDSTART -->{currentlog[0]}') != -1:
-                    AddToContentPage = f"|-<!-- LOGSTART -->\n{LogText[:len(LogText) - 2]}"
+                    AddToContentPage = f"|-<!-- LOGSTART -->{LogText[:len(LogText) - 2]}"
                     NewContentPage = NewContentPage + AddToContentPage
             
     if "|}" not in NewContentPage:
