@@ -4,8 +4,9 @@ import timecalcLB as tmcc
 import detectorsLB as dtc
 import scoreLB as scr
 import pagecleanersLB as pgcl
+import os
 
-LBversion = "0.2.06"
+LBversion = "0.2.07"
 
 #MENU DE DÉMARRAGE
 #print("Configuration classique : WEX, AC")
@@ -55,7 +56,7 @@ def deletelogs():
             ShouldKeepCurrentLogs[currentlog[0]] = False
 
     #CREER LA NOUVELLE PAGE
-    LogsTextList = pgcl.GetTextsFromLogsPage()
+    LogsTextList = pgcl.GetTextsFromLogs()
     OldPage = pageLog.get()
     NewContentPage = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")] + "\n"
     NewContentLogsData = ""
@@ -234,12 +235,14 @@ def main():
                         LogsCountFile.close()
                         
                         pageLog.put(NouveauLog, summary=f"V{LogsCount + 1}-{LBversion}", watch=None, minor=True, botflag=None, force=True, asynchronous=False, callback=None, show_diff=False)
-                        #print(score)
+                        LTF = open(f"./templates/{RecentPage['revid']}.txt", "w")
+                        LTF.write(NouveauLog)
+                        LTF.close()
 
                         #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
-                        CLF = open("currentlogs.txt", "a")
-                        CLF.write(f"{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']},\n")
-                        CLF.close()
+                        CLDF = open(f"./templates/{RecentPage['revid']}-D.txt", "w")
+                        CLDF.write(f"{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']}")
+                        CLDF.close()
     
             #CALCULS DE LA DATE DE DEBUT ET DE FIN DU CYCLE SUIVANT
             TimeDiff = time.time() - TimeNow
