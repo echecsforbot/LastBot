@@ -6,6 +6,12 @@ AC -> age change
 
 currentlog -> a log that is currently in the table (Utilisateur:LastBot/Logs)
 
+CLF -> current log file
+
+CLDF -> current log data file
+
+CLTF -> current log text file
+
 dp -> module 'dateutil.parser'
 
 dtc -> module 'detectorsLB'
@@ -19,6 +25,8 @@ INS -> insult
 IS -> ISO-8601
 
 LB -> LastBot
+
+LTS -> log text file
 
 lxq -> module 'lexiqueLB'
 
