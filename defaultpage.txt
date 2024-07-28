@@ -1,0 +1,51 @@
+<div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-between; align-items: flex-start; text-align: center;">
+<div style="flex-basis: 12em; flex-grow: 1;">
+{{Barre colorée
+| titre-couleur-fond = #07b562
+| titre-couleur = #FFFFFF
+| icone = Logo_wikibot.svg
+| titre = LastBot
+| lien = Utilisateur:LastBot
+}}
+</div>
+<div style="flex-basis: 12em; flex-grow: 1;">
+{{Barre colorée
+| titre-couleur-fond = #0f874f
+| titre-couleur = #FFFFFF
+| icone = Circle-icons-clipboard.svg
+| titre = Logs
+| lien = Utilisateur:LastBot/Logs
+}}
+</div>
+<div style="flex-basis: 12em; flex-grow: 1;">
+{{Barre colorée
+| titre-couleur-fond = #07b562
+| titre-couleur = #FFFFFF
+| icone = Circle-icons-crossroads.svg
+| titre = Aide
+| lien = Utilisateur:LastBot/Aide
+}}
+</div>
+</div>
+{{Boîte colorée
+ | titre = Informations importantes
+ | titre-couleur = #ffffff
+ | titre-couleur-fond = #07b562
+ | lien = 
+ | icone = Circle-icons-caution.svg
+ | style = flex: 1 1 auto;
+ | contenu = 
+* Merci de n'effectuer '''aucune''' modification sur cette page.
+* L'heure affichée est l''''[[Temps universel coordonné|UTC]]'''
+* Les logs sont ajoutés ou supprimés (diffs révoquées ou patrouillées) toutes les 60 secondes
+}}
+
+= Logs =
+{| class="wikitable sortable" style="width:100%;"
+|+
+!scope="col" | Score
+!scope="col" | Taille
+!scope="col" | Heure
+!scope="col" width="76%" | Détails
+<!-- LASTBOT START -->
+|}
