@@ -4,9 +4,8 @@ import timecalcLB as tmcc
 import detectorsLB as dtc
 import scoreLB as scr
 import pagecleanersLB as pgcl
-import os
 
-LBversion = "0.2.07"
+LBversion = "0.2.06"
 
 #MENU DE DÉMARRAGE
 #print("Configuration classique : WEX, AC")
@@ -56,7 +55,7 @@ def deletelogs():
             ShouldKeepCurrentLogs[currentlog[0]] = False
 
     #CREER LA NOUVELLE PAGE
-    LogsTextList = pgcl.GetTextsFromLogs()
+    LogsTextList = pgcl.GetTextsFromLogsPage()
     OldPage = pageLog.get()
     NewContentPage = OldPage[:OldPage.find("<!-- LASTBOT START -->") + len("<!-- LASTBOT START -->")] + "\n"
     NewContentLogsData = ""
@@ -77,7 +76,7 @@ def deletelogs():
                     NewContentPage = NewContentPage + AddToContentPage
             
     if "|}" not in NewContentPage:
-        NewContentPage = NewContentPage + "\n|}"
+        NewContentPage = NewContentPage + "|}"
 
     CLF = open("currentlogs.txt", "w")
 
@@ -235,14 +234,12 @@ def main():
                         LogsCountFile.close()
                         
                         pageLog.put(NouveauLog, summary=f"V{LogsCount + 1}-{LBversion}", watch=None, minor=True, botflag=None, force=True, asynchronous=False, callback=None, show_diff=False)
-                        LTF = open(f"./templates/{RecentPage['revid']}.txt", "w")
-                        LTF.write(NouveauLog)
-                        LTF.close()
+                        #print(score)
 
                         #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
-                        CLDF = open(f"./templates/{RecentPage['revid']}-D.txt", "w")
-                        CLDF.write(f"{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']}")
-                        CLDF.close()
+                        CLF = open("currentlogs.txt", "a")
+                        CLF.write(f"{RecentPage['revid']},{RecentPage['timestamp']},{RecentPage['user']},{RecentPage['title']},\n")
+                        CLF.close()
     
             #CALCULS DE LA DATE DE DEBUT ET DE FIN DU CYCLE SUIVANT
             TimeDiff = time.time() - TimeNow
