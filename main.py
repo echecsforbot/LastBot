@@ -182,7 +182,7 @@ def main():
                         #MISE EN PAGE DU LOG
                         #DETAILS DISPLAY
     
-                        ContentDisplay = f"\n# Commentaire : « {RecentPage['comment']} »"
+                        ContentDisplay = f"\n# Commentaire : <nowiki>« {RecentPage['comment']} »</nowiki>"
 
                         for result in resultsDTC:
                             ContentDisplay = ContentDisplay + result[1]
