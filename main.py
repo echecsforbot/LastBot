@@ -5,7 +5,7 @@ import detectorsLB as dtc
 import scoreLB as scr
 import pagecleanersLB as pgcl
 
-LBversion = "0.2.06"
+LBversion = "0.2.07"
 
 #MENU DE DÉMARRAGE
 #print("Configuration classique : WEX, AC")
@@ -78,11 +78,10 @@ def deletelogs():
     if "|}" not in NewContentPage:
         NewContentPage = NewContentPage + "|}"
 
-    CLF = open("currentlogs.txt", "w")
-
     with open("currentlogs.txt") as CLFbis:
         OldLogsData = CLFbis.readlines()
 
+    CLF = open("currentlogs.txt", "w")
     CLF.write(NewContentLogsData)
     CLF.close()
 
@@ -118,6 +117,7 @@ def deletelogs():
     if HasChanged == True:
         pageLog.put(NewText, summary=commentpage, minor=True, botflag=None, force=True, 
                     asynchronous=False, callback=None, show_diff=False)
+        
     
 #RUN
 def main():
