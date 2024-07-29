@@ -4,7 +4,6 @@ import timecalcLB as tmcc
 import time
 import datetime
 import re
-from pathlib import Path
 
 '''
 CE MODULE (pagecleanersLB.py) CONTIENT TOUTES LES FONCTIONS PERMETTANT
@@ -63,32 +62,28 @@ def GetCleanWEX():
 def ReadCurrentLogs():
     #LIRE currentlogs.txt
     #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
-    LogsData = Path("./templates/").glob('*')
+    with open("currentlogs.txt") as CLF:
+        LogsData = CLF.readlines()
 
     Data = []
     DataI = 0
-    for LogFile in LogsData:
-        if '-D' in LogFile:
-            CLDF = open(LogFile, "r")
-            Log = CLDF.read()
-            Data.append([])
-            Log = re.split(',', Log)
-            Data[DataI].append(int(Log[0]))
-            Data[DataI].append(tmcc.UNEP_IS(time.mktime(datetime.datetime.strptime(Log[1],"%Y-%m-%dT%H:%M:%SZ").timetuple())))
-            Data[DataI].append(Log[2])
-            Data[DataI].append(Log[3])
-            DataI += 1
+
+    for Log in LogsData:
+        Data.append([])
+        Log = re.split(',', Log)
+        Data[DataI].append(int(Log[0]))
+        Data[DataI].append(tmcc.UNEP_IS(time.mktime(datetime.datetime.strptime(Log[1],"%Y-%m-%dT%H:%M:%SZ").timetuple())))
+        Data[DataI].append(Log[2])
+        Data[DataI].append(Log[3])
+        DataI += 1
 
     return Data
 
-def GetTextsFromLogs():
+def GetTextsFromLogsPage():
     #RECUPERER LE TEXTE DES LOGS
-    LogsTextList = []
-    LogsText = Path("./templates/").glob('*')
-    for LogFile in LogsText:
-        if '-D' not in LogFile:
-            CLTF = open(LogFile, "r")
-            LogText = CLTF.read()
-            LogsTextList.append(LogText)
-    
+    pageLog = pywikibot.page.BasePage(site, "Utilisateur:LastBot/Logs")
+    ActualPage = pageLog.get()
+    LogsTextList = re.split("<!-- LOGSTART -->", ActualPage)
+    del LogsTextList[0]
+
     return LogsTextList
