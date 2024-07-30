@@ -1,4 +1,4 @@
-Lexique = ["Insulte", "Hors de conexte", "Potentiellement hors de conexte"]
+Lexique = ["Insulte", "Hors de contexte", "Potentiellement hors de contexte"]
 
 def GetFullName(name):
     global Lexique
