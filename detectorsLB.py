@@ -88,3 +88,10 @@ def USER(RecentPage):
 
     return ResultUSER
 
+def EMOJI(RecentPage): 
+    ResultEMOJI = False
+
+    if "Émoticône" in RecentPage['tags']:
+        ResultEMOJI = True
+    
+    return ResultEMOJI
