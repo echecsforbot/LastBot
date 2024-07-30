@@ -13,7 +13,7 @@ def Score(typeDTC, data, RecentPage):
 
     #WEX
     #FORMAT : {"WBL-INS": liste ins, "WBL-OOC": liste ooc, "WBL-POOC": liste pooc}
-    #FORMAT POUR CHAQUE SOUS-LIST : [[ins1, index ins1], [ins2, index ins2]]
+    #FORMAT POUR CHAQUE SOUS-LISTE : [[ins1, index ins1], [ins2, index ins2]]
     if typeDTC == "WEX":
         ContextLenStart = 30
         ContextLenEnd = 30
@@ -42,7 +42,7 @@ def Score(typeDTC, data, RecentPage):
                 if NoContext == True:
                     contextprint = "'''" + NewDiff[WordI:WordI + len(Word[0])].lower() + "'''"
 
-                ContentDisplay = ContentDisplay + f"\n{lxq.GetFullName(WEXListIndex)} : « {contextprint} »"
+                ContentDisplay = ContentDisplay + f"\n# {lxq.GetFullName(WEXListIndex)} : « {contextprint} »"
 
             WEXListIndex += 1
 
@@ -71,7 +71,7 @@ def Score(typeDTC, data, RecentPage):
 
         if data[0] >= 5:
             if data[1] / data[0] >= 0.2:
-                score += (data[1] / data[0]) * 0.8
+                score += (data[1] / data[0]) * 0.75
 
         if data[2] == "sysop" or data[2] == "patrolled":
             score -= 100
@@ -81,6 +81,18 @@ def Score(typeDTC, data, RecentPage):
             score += 0.3
         else:
             score += 0.7
+
+        results = [score, ContentDisplay]
+
+        return results
+    
+    #EMOJI
+    #FORMAT : BOOL
+    if typeDTC == "EMOJI":
+        if data == True:
+            ContentDisplay = "\n# Ajout d'émoticônes"
+
+            score += 1.5
 
         results = [score, ContentDisplay]
 
