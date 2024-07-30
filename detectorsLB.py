@@ -9,10 +9,16 @@ site = pywikibot.Site("fr", "wikipedia")
 #MOTS ET EXPRESSIONS
 
 PossibleEndOrStart = [' ', ',', ';', ':', '.', '?', '!', ')', '"', '«', '»', '[', ']', '/', '{', '}', "'", '(', '*', '+', '=', '<', '>']
+Diff = {}
+OldDiff = ""
+NewDiff = ""
 
 #DETECTION DE MOTS DANS LA PAGE BASÉE SUR LES LISTES PRINCIPALES
 def WEX(RecentPage):
     global PossibleEndOrStart
+    global Diff
+    global OldDiff
+    global NewDiff
 
     Diff = pgcl.CleanWEX(RecentPage)
     OldDiff = Diff["OldDiff"]
@@ -89,9 +95,19 @@ def USER(RecentPage):
     return ResultUSER
 
 def EMOJI(RecentPage): 
+    global Diff
+    global OldDiff
+    global NewDiff
+
     ResultEMOJI = False
 
     if "Émoticône" in RecentPage['tags']:
         ResultEMOJI = True
+        EXC_EMO_FILE = open(f"EXC-EMO.txt")
+        emojisEXC = EXC_EMO_FILE.read().split(",")
+        EXC_EMO_FILE.close()
+        for emoji in emojisEXC:
+            if NewDiff.find(emoji) != -1 and OldDiff.find(emoji) == -1:
+                ResultEMOJI = False
     
     return ResultEMOJI
