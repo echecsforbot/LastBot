@@ -173,6 +173,7 @@ def main():
                         with open("errors.txt", "a") as ErrorFile:
                             ErrorFile.write(f"\n{site.server_time()} - WEX failed: {RecentPage['revid']} [{str(RecentPage['timestamp'])}] [{RecentPage['title']}]")
 
+                    resultsDTC.append(scr.Score("EMOJI", dtc.EMOJI(RecentPage), RecentPage)) #EMOJI
 
                     #SOCRE
                     for result in resultsDTC:
