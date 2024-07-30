@@ -5,7 +5,7 @@ import detectorsLB as dtc
 import scoreLB as scr
 import pagecleanersLB as pgcl
 
-LBversion = "0.2.07"
+LBversion = "0.2.08"
 
 #MENU DE DÉMARRAGE
 #print("Configuration classique : WEX, AC")
@@ -199,13 +199,13 @@ def main():
                             Couleur = "blue"
 
                         if int(RecentPage['newlen']) - int(RecentPage['oldlen']) > 0:
-                            CouleurLenDiff = "#006400|(+"
+                            CouleurLenDiff = "Vert|(+"
                         elif int(RecentPage['newlen']) - int(RecentPage['oldlen']) < 0:
-                            CouleurLenDiff = "#8B0000|("
+                            CouleurLenDiff = "Rouge|("
                         else:
-                            CouleurLenDiff = "#A2A9B1|("
+                            CouleurLenDiff = "Gris|("
                             
-                        LenDiff = "'''{{" + f"Coloré|{CouleurLenDiff}{int(RecentPage['newlen']) - int(RecentPage['oldlen'])})" + "}}'''"
+                        LenDiff = "'''{{" + f"{CouleurLenDiff}{int(RecentPage['newlen']) - int(RecentPage['oldlen'])})" + "}}'''"
                         CheckBox = "{{" + f"Modèle:Checkbox|checked|color={Couleur}|tick=no" + "}}" + f"'''[{round(score, 2)}]'''"
                         Heure = str(RecentPage["timestamp"])
                         HeureDisplay = "'''" + str(Heure[11:16]) + "'''"
