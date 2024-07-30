@@ -107,7 +107,7 @@ def EMOJI(RecentPage):
         emojisEXC = EXC_EMO_FILE.read().split(",")
         EXC_EMO_FILE.close()
         for emoji in emojisEXC:
-            if NewDiff.find(emoji) != -1 and OldDiff.find(emoji) == -1:
+            if NewDiff.find(emoji) != -1:
                 ResultEMOJI = False
     
     return ResultEMOJI
