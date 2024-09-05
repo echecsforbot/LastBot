@@ -22,10 +22,19 @@ def deletelogs():
     ShouldKeepCurrentLogs = {}
     PatrolledCount = 0
     RevertedCount = 0
+    TimeCount = 0
     #FORMAT CURRENTLOG : [REVID, TIMESTAMP, USER, TITLE]
     for currentlog in CurrentLogs:
 
         IsFound = False
+
+        #CHECK TIME (24H)
+        TimeDifference = tmcc.IS_UNEP(site.server_time()) - tmcc.IS_UNEP(currentlog[1])
+        if TimeDifference > 86400:
+            IsFound = True
+            TimeCount += 1
+
+
         #CHECK MW-REVERTED
         StartingTime = tmcc.CalcIS(currentlog[1], - 120)
         EndingTime = tmcc.CalcIS(currentlog[1], 120)
@@ -101,6 +110,8 @@ def deletelogs():
         commentpage = commentpage + f"-revert:{RevertedCount}"
     if PatrolledCount >= 1:
         commentpage = commentpage + f"-patrol:{PatrolledCount}"
+    if TimeCount >= 1:
+        commentpage = commentpage + f"-old:{TimeCount}"
 
     commentpage = commentpage + f"-{LBversion}"
 
@@ -115,7 +126,7 @@ def deletelogs():
             HasChanged = True
 
     if HasChanged == True:
-        pageLog.put(NewText, summary=commentpage, minor=True, botflag=None, force=True, 
+        pageLog.put(NewText, summary=commentpage, minor=True, bot=True, force=True, 
                     asynchronous=False, callback=None, show_diff=False)
         
     
@@ -234,7 +245,7 @@ def main():
                         LogsCountFile.write(f"{LogsCount + 1}")
                         LogsCountFile.close()
                         
-                        pageLog.put(NouveauLog, summary=f"V{LogsCount + 1}-{LBversion}", watch=None, minor=True, botflag=None, force=True, asynchronous=False, callback=None, show_diff=False)
+                        pageLog.put(NouveauLog, summary=f"V{LogsCount + 1}-{LBversion}", watch=None, minor=True, bot=True, force=True, asynchronous=False, callback=None, show_diff=False)
                         #print(score)
 
                         #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
