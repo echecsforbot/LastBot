@@ -126,7 +126,7 @@ def deletelogs():
             HasChanged = True
 
     if HasChanged == True:
-        pageLog.put(NewText, summary=commentpage, minor=True, bot=None, force=True,
+        pageLog.put(NewText, summary=commentpage, minor=True, bot=True, force=True,
                     asynchronous=False, callback=None, show_diff=False)
         
     
@@ -245,7 +245,7 @@ def main():
                         LogsCountFile.write(f"{LogsCount + 1}")
                         LogsCountFile.close()
                         
-                        pageLog.put(NouveauLog, summary=f"V{LogsCount + 1}-{LBversion}", watch=None, minor=True, bot=None, force=True, asynchronous=False, callback=None, show_diff=False)
+                        pageLog.put(NouveauLog, summary=f"V{LogsCount + 1}-{LBversion}", watch=None, minor=True, bot=True, force=True, asynchronous=False, callback=None, show_diff=False)
                         #print(score)
 
                         #FORMAT CURRENTLOGS : REVID, TIMESTAMP, USER, TITLE
