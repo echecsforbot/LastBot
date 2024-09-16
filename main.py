@@ -39,13 +39,12 @@ def deletelogs():
         StartingTime = tmcc.CalcIS(currentlog[1], - 120)
         EndingTime = tmcc.CalcIS(currentlog[1], 120)
         LogsMW = site.recentchanges(start=StartingTime, end=EndingTime, reverse=True, top_only=False, namespaces=0, 
-                                    changetype="edit", user=currentlog[2])
+                                    changetype="edit", user=currentlog[2], tag="mw-reverted")
 
         for Log in LogsMW:
             if Log['revid'] == currentlog[0]:
-                if "mw-reverted" in Log['tags']:
-                    IsFound = True
-                    RevertedCount += 1
+                IsFound = True
+                RevertedCount += 1
         
         #CHECK PATROLLED
         if IsFound == False:
