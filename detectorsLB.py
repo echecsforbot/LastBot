@@ -1,6 +1,7 @@
 import listsLB as lst
 import pagecleanersLB as pgcl
 import pywikibot
+from anyascii import anyascii
 
 '''
 CE MODULE (detectorsLB.py) CONTIENT TOUS LES DÉTECTEURS DE VANDALISMES
@@ -56,7 +57,55 @@ def WEX(RecentPage):
 
 #DETECTION DES CHANGEMENTS DE DATES DE NAISSANCE ET DE MORT
 def AC(RecentPage):
-    pass
+    global OldDiff
+    global NewDiff
+
+    Templates = ["date de naissance", "date de décès"]
+    DiffsDate = []
+    for Template in Templates:
+        if OldDiff.find(Template) != -1 and NewDiff.find(Template) != -1:
+
+            OldDiffI_Start = OldDiff.find(Template)
+            while OldDiff[OldDiffI_Start] != "{":
+                OldDiffI_Start += 1
+
+            OldDiffI_End = OldDiffI_Start
+            while OldDiff[OldDiffI_End] != "}":
+                OldDiffI_End += 1
+
+            NewDiffI_Start = NewDiff.find(Template)
+            while NewDiff[NewDiffI_Start] != "{":
+                NewDiffI_Start += 1
+            
+            NewDiffI_End = NewDiffI_Start
+            while OldDiff[NewDiffI_End] != "}":
+                NewDiffI_End += 1
+
+            StartingDate = 0
+            ActualI = OldDiffI_Start
+            while ActualI < OldDiffI_End:
+                try:
+                    if int(OldDiff[ActualI:ActualI + 4]) > 0:
+                        StartingDate = int(OldDiff[ActualI:ActualI + 4])
+                except:
+                    pass
+
+                ActualI += 1
+
+            EndingDate = 0
+            ActualI = NewDiffI_Start
+            while ActualI < NewDiffI_End:
+                try:
+                    if int(NewDiff[ActualI:ActualI + 4]) > 0:
+                        EndingDate = int(NewDiff[ActualI:ActualI + 4])
+                except:
+                    pass
+
+                ActualI =+ 1
+
+            DiffsDate.append([Template, StartingDate, EndingDate])
+
+    return DiffsDate
 
 #ANALYSE DU PASSE RECENT DE L'UTILISATEUR
 def USER(RecentPage):
@@ -106,7 +155,9 @@ def EMOJI(RecentPage):
         EXC_EMO_FILE = open(f"EXC-EMO.txt")
         emojisEXC = EXC_EMO_FILE.read().split(",")
         EXC_EMO_FILE.close()
+
         for emoji in emojisEXC:
+            emoji = anyascii(emoji)
             if NewDiff.find(emoji) != -1:
                 ResultEMOJI = False
     
