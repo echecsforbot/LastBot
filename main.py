@@ -5,7 +5,7 @@ import detectorsLB as dtc
 import scoreLB as scr
 import pagecleanersLB as pgcl
 
-LBversion = "0.2.09"
+LBversion = "0.2.10"
 
 #MENU DE DÉMARRAGE
 #print("Configuration classique : WEX, AC")
@@ -177,6 +177,8 @@ def main():
                     #DTC + SCR
                     #WEX
                     resultsDTC.append(scr.Score("USER", dtc.USER(RecentPage), RecentPage)) #USER
+
+                    resultsDTC.append(scr.Score("AC"), dtc.USER(RecentPage), RecentPage) #AC
 
                     try:
                         resultsDTC.append(scr.Score("WEX", dtc.WEX(RecentPage), RecentPage)) #WEX
