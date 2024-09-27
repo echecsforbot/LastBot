@@ -51,14 +51,12 @@ def Score(typeDTC, data, RecentPage):
         return results
     
     #AC
-    #FORMAT : [AGE DIFF, OLD AGE, NEW AGE]
+    #FORMAT : [DATE TYPE, OLD AGE, NEW AGE]
     if typeDTC == "AC":
         
-        if data[0] > 4:
-            for age in range(data[0]):
-                score += 0.15
+        score += ((((data[2] - data[1])) ** 2 ** 0.5) / 5) ** 2
 
-            ContentDisplay = f"\n# Changement important de date de naissance ou de mort : {data[1]} -> {data[2]}"
+        ContentDisplay = f"\n# Changement de {data[0]} : '''{data[1]}''' -> '''{data[2]}'''"
         
         results = [score, ContentDisplay]
 
@@ -71,16 +69,16 @@ def Score(typeDTC, data, RecentPage):
 
         if data[0] >= 5:
             if data[1] / data[0] >= 0.2:
-                score += (data[1] / data[0]) * 0.75
+                score += (data[1] / data[0]) * 0.8
 
         if data[2] == "sysop" or data[2] == "patrolled":
             score -= 100
         elif data[2] == "confirmed":
-            score += 0.15
+            score += 0.1
         elif data[2] == "registered":
-            score += 0.3
+            score += 0.25
         else:
-            score += 0.7
+            score += 0.6
 
         results = [score, ContentDisplay]
 
